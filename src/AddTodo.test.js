@@ -68,10 +68,8 @@ test('test that App component doesn\'t add a task without due date', () => {
   fireEvent.change(inputTask, { target: { value: "History Test"}});
   fireEvent.click(element);
   // Check that task was not added
-  const check = screen.getByTestId(/History Test/i);
-  const checkDate = screen.getByText(new RegExp(dueDate, "i"));
+  const check = screen.queryByTestId("History Test");
   expect(check).not.toBeInTheDocument();
-  expect(checkDate).not.toBeInTheDocument();
 });
 
 
@@ -87,10 +85,11 @@ test('test that App component can be deleted thru checkbox', () => {
   fireEvent.change(inputDate, { target: { value: dueDate}});
   fireEvent.click(element);
   // Find checkbox and click it to delete the task
-  const checkbox = screen.getByRole('checkbox', { name: /History Test/i });
+  const checkbox = screen.getByRole('checkbox', { name: /History Test checkbox/i });
   fireEvent.click(checkbox);
   // Check that task was deleted
-  expect(task).not.toBeInTheDocument();
+  const check = screen.getByTestId(/History Test/i)
+  expect(check).not.toBeInTheDocument();
 });
 
 
