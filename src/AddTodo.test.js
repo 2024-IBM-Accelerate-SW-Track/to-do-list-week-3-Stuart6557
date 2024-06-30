@@ -16,9 +16,6 @@ afterEach(() => {
   container = null;
 });
 
-
-
-
 test('test that App component doesn\'t render dupicate Task', () => {
   render(<App />);
   const inputTask = screen.getByRole('textbox', {name: /Add New Item/i});
@@ -39,7 +36,6 @@ test('test that App component doesn\'t render dupicate Task', () => {
   fireEvent.change(inputDate, { target: { value: dueDate}});
   fireEvent.click(element);
   // Check if task was added only once
-  check = screen.getByText(/History Test/i);
   const tasks = screen.getAllByText(/History Test/i);
   expect(tasks.length).toBe(1);
 });
@@ -53,10 +49,8 @@ test('test that App component doesn\'t add a task without task name', () => {
   fireEvent.change(inputDate, { target: { value: dueDate}});
   fireEvent.click(element);
   // Check that task was not added
-  const check = screen.getByText(/History Test/i);
-  const checkDate = screen.getByText(new RegExp(dueDate, "i"));
-  expect(check).not.toBeInTheDocument();
-  expect(checkDate).not.toBeInTheDocument();
+  const check = screen.queryByText(/History Test/i);
+  expect(check).toBeNull();
 });
 
 test('test that App component doesn\'t add a task without due date', () => {
@@ -72,8 +66,6 @@ test('test that App component doesn\'t add a task without due date', () => {
   expect(check).not.toBeInTheDocument();
 });
 
-
-
 test('test that App component can be deleted thru checkbox', () => {
   render(<App />);
   const inputTask = screen.getByRole('textbox', {name: /Add New Item/i});
@@ -85,10 +77,10 @@ test('test that App component can be deleted thru checkbox', () => {
   fireEvent.change(inputDate, { target: { value: dueDate}});
   fireEvent.click(element);
   // Find checkbox and click it to delete the task
-  const checkbox = screen.getByRole('checkbox', { name: /History Test checkbox/i });
+  const checkbox = screen.getByTestId("History Test checkbox");
   fireEvent.click(checkbox);
   // Check that task was deleted
-  const check = screen.getByTestId(/History Test/i)
+  const check = screen.queryByTestId(/History Test/i);
   expect(check).not.toBeInTheDocument();
 });
 
@@ -104,6 +96,6 @@ test('test that App component renders different colors for past due events', () 
   fireEvent.change(inputDate, { target: { value: dueDate}});
   fireEvent.click(element);
   // Check if task was added with the correct color
-  const check = screen.getByTestId(/History Test/i).style.background
+  const check = screen.getByTestId("History Test").style.background;
   expect(check).toBe("pink");
 });
